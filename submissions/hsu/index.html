@@ -1,7 +1,8 @@
 <html>
 <head>
 <title>Project 0</title>
-<style type="text/css" href="project0.css"></style>
+<link rel="stylesheet" type="text/css" href="project0.css"></link>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <!--Put your D3 import statement between these two lines-->
     <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -10,24 +11,24 @@
 
 <body>
 	<div id="partOne">
-        <h1>Part One: </h1>
+        <h1>Part One</h1>
 	</div>
 
     <div id="partTwo">
-        <h1>Part Two: </h1>
+        <h1>Part Two</h1>
         <div id="barchart">
         </div>
 	</div>
 
     <div id="partThree">
-        <h1>Part Three &amp; Four: </h1>
+        <h1>Part Three &amp; Four</h1>
         <div id="scatterplot">
             <p id="scatterLabel"></p>
         </div>
 	</div>
 
     <div id="partFive">
-        <h1>Part Five: </h1>
+        <h1>Part Five</h1>
         <div id="scatterplotSet">
         </div>
 	</div>
@@ -66,6 +67,69 @@
         }
 
         // Put your part two code here ***********************
+        d3.csv( 'data/anscombe_III.csv', function( csvData ){
+          var data = csvData
+          var width = 600;
+          var height = 400;
+          var xOffset = 110;
+          var yOffset = 100;
+          var margin = 10;
+
+          // Create svg to contain vis
+          var svg = d3.select( '#barchart' ).append( 'svg:svg' )
+                                            .attr( 'width', width )
+                                            .attr( 'height', height );
+
+          // Define axes scale
+          var xScale = d3.scale.linear()
+                         .domain( [d3.min( data, function( d ){
+                                  return parseFloat( d['x'] );
+                                } )-1, d3.max( data, function( d ){
+                                  return parseFloat( d['x'] );
+                                } )+1] )
+                         .range( [xOffset, width - margin] );
+
+           var yScale = d3.scale.linear()
+                          .domain( [d3.min( data, function( d ){
+                                   return parseFloat( d['x'] );
+                                 } )-1, d3.max( data, function( d ){
+                                   return parseFloat( d['x'] );
+                                 } )+1] )
+                          .range( [height - yOffset, margin] );
+
+            // Create axes
+            var xAxis = d3.svg.axis()
+                              .scale( xScale )
+                              .orient( 'bottom' )
+                              .ticks( 5 );
+            var xAxisG = svg.append( 'g' )
+                            .attr( 'class', 'axis' )
+                            .attr( 'transform', 'translate(0, ' + (height - yOffset) + ')' )
+                            .call( xAxis );
+
+            var yAxis = d3.svg.axis()
+                              .scale( yScale )
+                              .orient( 'left' )
+                              .ticks( 5 );
+            var yAxisG = svg.append( 'g' )
+                            .attr( 'class', 'axis' )
+                            .attr( 'transform', 'translate(' + (xOffset) + ')' )
+                            .call( yAxis );
+
+            // Create bar elements & bind data to elements
+            var bar = svg.selectAll( '.bar' )
+                         .data( data );
+            bar.enter().append( 'svg:rect' );
+            bar.attr( 'class', 'bar' )
+               .attr( 'width', 10 )
+               // because svg y-axes grow downwards, the real bar height is the
+               // scaled xVal subtracted from the svg height
+               .attr( 'height', function( d ){ return height - yOffset - yScale(d['x']); } )
+               .attr( 'x', function( d ){ return xScale(d['x']); } )
+               .attr( 'y', function( d ){ return yScale(d['x']); } )
+            bar.append( 'svg:title' )
+                .text(function( d ){ return d['x'] });
+        } );
 
         // Put your part three & four code here ***********************
 
