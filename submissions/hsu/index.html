@@ -171,7 +171,8 @@
            point.enter().append('svg:circle' );
            point.attr( 'class', 'inactive' )
                  // give each point unique id so they can be selected
-                 // individually later for color changes
+                 // individually later for interaction
+                 // there's probably a better way of doing this...
                 .attr( 'id', function( d ){
                     return 'x' + d['x'];
                  } )
@@ -179,8 +180,13 @@
                 .attr( 'cy', function( d ){ return yScale(d['y']); } )
                 .attr( 'r', 7 );
 
+            // Print x & y values on point click
+            point.on( 'click', function( e ){
+              d3.select( '#scatterLabel' )
+                .text( 'Coordinates: (' + e.x + ', ' + e.y + ')')
+            } )
+
             // Change color on point hover
-            // there's probably a better way of doing this...
             point.on( 'mouseover', function( e ){
               svg.select( '#x' + e.x )
                  .attr( 'class', 'active');
