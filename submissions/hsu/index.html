@@ -167,8 +167,8 @@
 
            // Create point elements & bind data to elements
            var point = svg.selectAll( '.point' )
-                          .data(data);
-           point.enter().append('svg:circle' );
+                          .data( data );
+           point.enter().append( 'svg:circle' );
            point.attr( 'class', 'inactive' )
                  // give each point unique id so they can be selected
                  // individually later for interaction
@@ -183,8 +183,8 @@
             // Print x & y values on point click
             point.on( 'click', function( e ){
               d3.select( '#scatterLabel' )
-                .text( 'Coordinates: (' + e.x + ', ' + e.y + ')')
-            } )
+                .text( 'Coordinates: (' + e.x + ', ' + e.y + ')' )
+            } );
 
             // Change color on point hover
             point.on( 'mouseover', function( e ){
@@ -194,12 +194,101 @@
             point.on( 'mouseout', function( e ){
               svg.select( '#x' + e.x )
                  .attr( 'class', 'inactive' )
-            } )
-
-
+            } );
         } );
-        // Put your part five code here ***********************
 
+        // Put your part five code here ***********************
+        var allData = [];
+        d3.csv( 'data/anscombe_I.csv', function( csvData_I ){
+          allData.push( csvData_I );
+
+          d3.csv( 'data/anscombe_II.csv', function( csvData_II ){
+            allData.push( csvData_II );
+
+            d3.csv( 'data/anscombe_III.csv', function( csvData_III ){
+              allData.push( csvData_III );
+
+              d3.csv( 'data/anscombe_IV.csv', function( csvData_IV ){
+                allData.push( csvData_IV );
+                var width = 320;
+                var height = 300;
+                var xOffset = 90;
+                var yOffset = 80;
+                var margin = 10;
+
+                allData.forEach( function( dataset, index ){
+                  // a lazy way of getting roman numerals in the title...
+                  // without needing to turn the combined array into an obj
+                  if ( (index + 1 < 4) ){
+                    var romNum = 'I'.repeat( index + 1 );
+                  }
+                  else {
+                    var romNum = 'IV';
+                  }
+
+                  // Create svg for charts
+                  var svg = d3.select( '#scatterplotSet' ).append( 'svg:svg' )
+                                                    .attr( 'width', width )
+                                                    .attr( 'height', height );
+
+                  // Define axes scale
+                  var xScale = d3.scale.linear()
+                                 .domain( [d3.min( dataset, function( d ){
+                                          return parseFloat( d['x'] );
+                                        } )-1, d3.max( dataset, function( d ){
+                                          return parseFloat( d['x'] );
+                                        } )+1] )
+                                 .range( [xOffset, width - margin] );
+                   var yScale = d3.scale.linear()
+                                 .domain( [d3.min( dataset, function( d ){
+                                          return parseFloat( d['y'] );
+                                        } )-1, d3.max( dataset, function( d ){
+                                          return parseFloat( d['y'] );
+                                        } )+1] )
+                                 .range( [height - yOffset, margin] );
+
+                   // Create axes
+                   var xAxis = d3.svg.axis()
+                                     .scale( xScale )
+                                     .orient( 'bottom' )
+                                     .ticks( 5 );
+                   var xLabel = svg.append( 'text' )
+                                   .attr( 'class', 'label' )
+                                   .attr( 'x', width/1.5 )
+                                   .attr( 'y', height - margin/2 )
+                                   .text( 'Anscombe ' + romNum );
+                   var xAxisG = svg.append( 'g' )
+                                   .attr( 'class', 'axis' )
+                                   .attr( 'transform', 'translate(0, ' + (height - yOffset) + ')' )
+                                   .call( xAxis );
+
+                   var yAxis = d3.svg.axis()
+                                     .scale( yScale )
+                                     .orient( 'left' )
+                                     .ticks( 5 );
+                   var yAxisG = svg.append( 'g' )
+                                   .attr( 'class', 'axis' )
+                                   .attr( 'transform', 'translate(' + (xOffset) + ')' )
+                                   .call( yAxis );
+
+                   // Create point elements & bind data to elements
+                   var point = svg.selectAll( '.point' )
+                                  .data( dataset );
+                   point.enter().append( 'svg:circle' );
+                   point.attr( 'class', 'point' )
+                        .attr( 'cx', function( d ){ return xScale(d['x']); } )
+                        .attr( 'cy', function( d ){ return yScale(d['y']); } )
+                        .attr( 'r', 4 );
+
+                } )
+
+
+
+
+              } ); // end anscombe_IV
+            } ); // end anscombe_III
+          } ); // end anscombe_II
+        } ); // end anscombe_I
     </script>
 </body>
 

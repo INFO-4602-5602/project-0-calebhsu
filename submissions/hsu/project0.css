@@ -33,6 +33,11 @@ body {
     cursor: pointer;
 }
 
+.point {
+  fill: rgba(255, 187, 40, 0.75);
+  stroke: #eb930f;
+}
+
 #partOne {
   margin: 2.5em auto;
 }
