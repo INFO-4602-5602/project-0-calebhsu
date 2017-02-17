@@ -89,50 +89,92 @@
                                 } )+1] )
                          .range( [xOffset, width - margin] );
 
-           var yScale = d3.scale.linear()
-                          .domain( [d3.min( data, function( d ){
-                                   return parseFloat( d['x'] );
-                                 } )-1, d3.max( data, function( d ){
-                                   return parseFloat( d['x'] );
-                                 } )+1] )
-                          .range( [height - yOffset, margin] );
+          var yScale = d3.scale.linear()
+                        .domain( [d3.min( data, function( d ){
+                                 return parseFloat( d['x'] );
+                               } )-1, d3.max( data, function( d ){
+                                 return parseFloat( d['x'] );
+                               } )+1] )
+                        .range( [height - yOffset, margin] );
 
-            // Create axes
-            var xAxis = d3.svg.axis()
-                              .scale( xScale )
-                              .orient( 'bottom' )
-                              .ticks( 5 );
-            var xAxisG = svg.append( 'g' )
-                            .attr( 'class', 'axis' )
-                            .attr( 'transform', 'translate(0, ' + (height - yOffset) + ')' )
-                            .call( xAxis );
+          // Create axes
+          var xAxis = d3.svg.axis()
+                            .scale( xScale )
+                            .orient( 'bottom' )
+                            .ticks( 5 );
+          var xAxisG = svg.append( 'g' )
+                          .attr( 'class', 'axis' )
+                          .attr( 'transform', 'translate(0, ' + (height - yOffset) + ')' )
+                          .call( xAxis );
 
-            var yAxis = d3.svg.axis()
-                              .scale( yScale )
-                              .orient( 'left' )
-                              .ticks( 5 );
-            var yAxisG = svg.append( 'g' )
-                            .attr( 'class', 'axis' )
-                            .attr( 'transform', 'translate(' + (xOffset) + ')' )
-                            .call( yAxis );
+          var yAxis = d3.svg.axis()
+                            .scale( yScale )
+                            .orient( 'left' )
+                            .ticks( 5 );
+          var yAxisG = svg.append( 'g' )
+                          .attr( 'class', 'axis' )
+                          .attr( 'transform', 'translate(' + (xOffset) + ')' )
+                          .call( yAxis );
 
-            // Create bar elements & bind data to elements
-            var bar = svg.selectAll( '.bar' )
-                         .data( data );
-            bar.enter().append( 'svg:rect' );
-            bar.attr( 'class', 'bar' )
-               .attr( 'width', 10 )
-               // because svg y-axes grow downwards, the real bar height is the
-               // scaled xVal subtracted from the svg height
-               .attr( 'height', function( d ){ return height - yOffset - yScale(d['x']); } )
-               .attr( 'x', function( d ){ return xScale(d['x']); } )
-               .attr( 'y', function( d ){ return yScale(d['x']); } )
-            bar.append( 'svg:title' )
-                .text(function( d ){ return d['x'] });
+          // Create bar elements & bind data to elements
+          var bar = svg.selectAll( '.bar' )
+                       .data( data );
+          bar.enter().append( 'svg:rect' );
+          bar.attr( 'class', 'bar' )
+             .attr( 'width', 10 )
+             // because svg y-axes grow downwards, the real bar height is the
+             // scaled xVal subtracted from the svg height
+             .attr( 'height', function( d ){ return height - yOffset - yScale(d['x']); } )
+             .attr( 'x', function( d ){ return xScale(d['x']) - 5; } )
+             .attr( 'y', function( d ){ return yScale(d['x']); } )
+          bar.append( 'svg:title' )
+              .text(function( d ){ return d['x'] });
+
+
+          // Put your part three & four code here ***********************
+          // Create svg to contain vis
+          var svg = d3.select( '#scatterplot' ).append( 'svg:svg' )
+                                            .attr( 'width', width )
+                                            .attr( 'height', height );
+
+          // Update y scale to use y values
+          yScale = d3.scale.linear()
+                     .domain( [d3.min( data, function( d ){
+                              return parseFloat( d['y'] );
+                            } )-1, d3.max( data, function( d ){
+                              return parseFloat( d['y'] );
+                            } )+1] )
+                     .range( [height - yOffset, margin] );
+
+           // Create axes
+           var xAxis = d3.svg.axis()
+                             .scale( xScale )
+                             .orient( 'bottom' )
+                             .ticks( 5 );
+           var xAxisG = svg.append( 'g' )
+                           .attr( 'class', 'axis' )
+                           .attr( 'transform', 'translate(0, ' + (height - yOffset) + ')' )
+                           .call( xAxis );
+
+           var yAxis = d3.svg.axis()
+                             .scale( yScale )
+                             .orient( 'left' )
+                             .ticks( 5 );
+           var yAxisG = svg.append( 'g' )
+                           .attr( 'class', 'axis' )
+                           .attr( 'transform', 'translate(' + (xOffset) + ')' )
+                           .call( yAxis );
+
+           // Create point elements & bind data to elements
+           var point = svg.selectAll('.point')
+                          .data(data);
+           point.enter().append('svg:circle');
+           point.attr('class', 'point')
+                .attr('cx', function( d ){ return xScale(d['x']); } )
+                .attr('cy', function( d ){ return yScale(d['y']); } )
+                .attr('r', 5)
+
         } );
-
-        // Put your part three & four code here ***********************
-
         // Put your part five code here ***********************
 
     </script>

@@ -11,13 +11,13 @@ body {
 }
 
 .bar {
-  fill: #2f84c2;
+  fill: #00c49f;
   stroke: none;
 }
 
 .point {
-    fill: #f00;
-    stroke: #000;
+    fill: #ff8042;
+    stroke: #ee611d;
 }
 
 .label {
