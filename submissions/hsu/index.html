@@ -166,13 +166,30 @@
                            .call( yAxis );
 
            // Create point elements & bind data to elements
-           var point = svg.selectAll('.point')
+           var point = svg.selectAll( '.point' )
                           .data(data);
-           point.enter().append('svg:circle');
-           point.attr('class', 'point')
-                .attr('cx', function( d ){ return xScale(d['x']); } )
-                .attr('cy', function( d ){ return yScale(d['y']); } )
-                .attr('r', 5)
+           point.enter().append('svg:circle' );
+           point.attr( 'class', 'inactive' )
+                 // give each point unique id so they can be selected
+                 // individually later for color changes
+                .attr( 'id', function( d ){
+                    return 'x' + d['x'];
+                 } )
+                .attr( 'cx', function( d ){ return xScale(d['x']); } )
+                .attr( 'cy', function( d ){ return yScale(d['y']); } )
+                .attr( 'r', 7 );
+
+            // Change color on point hover
+            // there's probably a better way of doing this...
+            point.on( 'mouseover', function( e ){
+              svg.select( '#x' + e.x )
+                 .attr( 'class', 'active');
+            } );
+            point.on( 'mouseout', function( e ){
+              svg.select( '#x' + e.x )
+                 .attr( 'class', 'inactive' )
+            } )
+
 
         } );
         // Put your part five code here ***********************

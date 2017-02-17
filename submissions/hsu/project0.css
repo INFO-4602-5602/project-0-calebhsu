@@ -10,12 +10,17 @@ body {
     shape-rendering: crispEdges;
 }
 
+.active {
+  fill: #d22f57 !important;
+  stroke: #a11239 !important;
+}
+
 .bar {
   fill: #00c49f;
   stroke: none;
 }
 
-.point {
+.inactive {
     fill: #ff8042;
     stroke: #ee611d;
 }
